@@ -77,6 +77,75 @@ pip install paramiko
 ### 4. **Validación**
    - Verifica si el comando fue exitoso buscando en la salida errores como `Command fail` o `error`.
 
+## **Instalación y Configuración Automática**
+
+El script `setup_change_pwd.sh` automatiza la instalación, configuración y programación del script `change_pwd_guest.py`. Sigue los pasos a continuación para configurarlo:
+
+### 1. **Descargar el Script de Configuración**
+
+En un terminal, descarga el archivo `setup_change_pwd.sh` ejecutando el siguiente comando:
+
+```bash
+curl -O https://raw.githubusercontent.com/carlostcba/ChangePassGuestFortigate/main/setup_change_pwd.sh
+```
+
+### 2. **Asignar Permisos de Ejecución**
+
+Después de descargar el archivo, asigna permisos de ejecución con:
+
+```bash
+chmod +x setup_change_pwd.sh
+```
+
+### 3. **Ejecutar el Script**
+
+Ejecuta el script para instalar las dependencias, configurar el script Python y programar la tarea en `cron`:
+
+```bash
+sudo ./setup_change_pwd.sh
+```
+
+### 4. **Confirmar la Configuración**
+
+El script realizará las siguientes acciones:
+- Descargará `change_pwd_guest.py` desde el repositorio y lo colocará en `/usr/local/bin/`.
+- Instalará las dependencias necesarias, incluyendo `paramiko`.
+- Configurará un script de reintento (`retry_change_pwd_guest.sh`) para manejar fallos.
+- Programará una tarea en `cron` para ejecutar automáticamente el script el **primer día de cada mes a las 00:01 horas**.
+- Los logs se almacenarán en `/var/log/change_pwd_guest.log`.
+
+---
+
+### **Verificar la Tarea Programada**
+
+Para confirmar que la tarea en `cron` se programó correctamente, usa:
+
+```bash
+crontab -l
+```
+
+Deberías ver una línea similar a:
+
+```bash
+1 0 1 * * /usr/local/bin/retry_change_pwd_guest.sh
+```
+
+---
+
+## **Manual de Uso**
+
+### **Ejecutar Manualmente**
+Si necesitas ejecutar el script manualmente:
+```bash
+python3 /usr/local/bin/change_pwd_guest.py
+```
+
+### **Ver Logs**
+Para ver los logs de ejecución:
+```bash
+cat /var/log/change_pwd_guest.log
+```
+
 ## Personalización
 
 Puedes modificar:
